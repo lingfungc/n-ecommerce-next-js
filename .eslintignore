@@ -1,5 +1,0 @@
-# Ignore the Prisma generate directory
-lib/generated/prisma
-
-.next
-node_modules
