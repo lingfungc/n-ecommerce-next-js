@@ -8,6 +8,15 @@ async function main() {
   await prisma.product.createMany({ data: sampleData.products });
 
   console.log("Database seeded (products) successfully.");
+
+  await prisma.account.deleteMany();
+  await prisma.session.deleteMany();
+  await prisma.verificationToken.deleteMany();
+  await prisma.user.deleteMany();
+
+  await prisma.user.createMany({ data: sampleData.users });
+
+  console.log("Database seeded (user-based data) successfully.");
 }
 
 main();
