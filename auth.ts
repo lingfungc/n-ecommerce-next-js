@@ -78,7 +78,7 @@ export const config = {
       if (user) {
         token.role = user.role;
 
-        // If user has no name then use the email
+        // If user has no name then use the email as name
         if (user.name === "NO_NAME") {
           token.name = user.email!.split("@")[0];
 
