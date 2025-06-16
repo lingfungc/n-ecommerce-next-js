@@ -3,7 +3,7 @@ import { notFound, redirect } from "next/navigation";
 
 // import Stripe from "stripe";
 
-// import { auth } from "@/auth";
+import { auth } from "@/auth";
 import { ShippingAddress } from "@/types";
 import { getOrderById } from "@/lib/actions/order.actions";
 
@@ -23,12 +23,12 @@ const OrderDetailsPage = async (props: {
   const order = await getOrderById(id);
   if (!order) notFound();
 
-  // const session = await auth();
+  const session = await auth();
 
   // Redirect the user if they don't own the order
-  // if (order.userId !== session?.user.id && session?.user.role !== 'admin') {
-  //   return redirect('/unauthorized');
-  // }
+  if (order.userId !== session?.user.id && session?.user.role !== "admin") {
+    return redirect("/unauthorized");
+  }
 
   // let client_secret = null;
 
@@ -53,7 +53,7 @@ const OrderDetailsPage = async (props: {
       }}
       paypalClientId={process.env.PAYPAL_CLIENT_ID || "sb"}
       // stripeClientSecret={client_secret}
-      // isAdmin={session?.user?.role === 'admin' || false}
+      isAdmin={session?.user?.role === "admin" || false}
     />
   );
 };

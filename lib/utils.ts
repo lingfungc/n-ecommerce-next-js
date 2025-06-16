@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import qs from "query-string";
 
 // Merge ClassNames
 export function cn(...inputs: ClassValue[]) {
@@ -19,7 +20,7 @@ export function formatNumberWithDeciaml(num: number): string {
 
 // Format errors
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export async function formatError(error: any) {
+export function formatError(error: any) {
   if (error.name === "ZodError") {
     // Handle Zod error
     const fieldErrors = Object.keys(error.errors).map(
@@ -72,11 +73,11 @@ export function formatCurrency(amount: number | string | null) {
 }
 
 // Format Number
-// const NUMBER_FORMATTER = new Intl.NumberFormat("en-GB");
+const NUMBER_FORMATTER = new Intl.NumberFormat("en-GB");
 
-// export function formatNumber(number: number) {
-//   return NUMBER_FORMATTER.format(number);
-// }
+export function formatNumber(number: number) {
+  return NUMBER_FORMATTER.format(number);
+}
 
 // Shorten UUID
 export function formatId(id: string) {
@@ -130,26 +131,26 @@ export const formatDateTime = (dateString: Date) => {
 };
 
 // Form the pagination links
-// export function formUrlQuery({
-//   params,
-//   key,
-//   value,
-// }: {
-//   params: string;
-//   key: string;
-//   value: string | null;
-// }) {
-//   const query = qs.parse(params);
+export function formUrlQuery({
+  params,
+  key,
+  value,
+}: {
+  params: string;
+  key: string;
+  value: string | null;
+}) {
+  const query = qs.parse(params);
 
-//   query[key] = value;
+  query[key] = value;
 
-//   return qs.stringifyUrl(
-//     {
-//       url: window.location.pathname,
-//       query,
-//     },
-//     {
-//       skipNull: true,
-//     }
-//   );
-// }
+  return qs.stringifyUrl(
+    {
+      url: window.location.pathname,
+      query,
+    },
+    {
+      skipNull: true,
+    }
+  );
+}
