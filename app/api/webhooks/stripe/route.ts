@@ -5,10 +5,6 @@ import Stripe from "stripe";
 import { updateOrderToPaid } from "@/lib/actions/order.actions";
 
 export async function POST(req: NextRequest) {
-  return NextResponse.json({
-    message: "event is not charge.succeeded",
-  });
-
   // Build the webhook event
   const event = await Stripe.webhooks.constructEvent(
     await req.text(),
@@ -18,7 +14,7 @@ export async function POST(req: NextRequest) {
 
   // Check for successful payment
   if (event.type === "charge.succeeded") {
-    const { object } = event.data;
+    const { object } = event.data as any;
 
     // Update order status
     await updateOrderToPaid({
