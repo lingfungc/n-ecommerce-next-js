@@ -5,6 +5,7 @@ import {
   shippingAddressSchema,
   signInFormSchema,
   signUpFormSchema,
+  updateUserSchema,
 } from "../validators";
 import { ShippingAddress } from "@/types";
 
@@ -14,6 +15,9 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { hashSync } from "bcrypt-ts-edge";
 import { formatError } from "../utils";
 import { PAGE_SIZE } from "../constants";
+import { revalidatePath } from "next/cache";
+import { Prisma } from "@prisma/client";
+import { z } from "zod";
 
 // * We need the prevState in props when we are going to use useActionState hook
 
@@ -223,42 +227,42 @@ export async function getAllUsers({
 }
 
 // Delete a user
-// export async function deleteUser(id: string) {
-//   try {
-//     await prisma.user.delete({ where: { id } });
+export async function deleteUser(id: string) {
+  try {
+    await prisma.user.delete({ where: { id } });
 
-//     revalidatePath("/admin/users");
+    revalidatePath("/admin/users");
 
-//     return {
-//       success: true,
-//       message: "User deleted successfully",
-//     };
-//   } catch (error) {
-//     return {
-//       success: false,
-//       message: formatError(error),
-//     };
-//   }
-// }
+    return {
+      success: true,
+      message: "User deleted successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+}
 
 // Update a user
-// export async function updateUser(user: z.infer<typeof updateUserSchema>) {
-//   try {
-//     await prisma.user.update({
-//       where: { id: user.id },
-//       data: {
-//         name: user.name,
-//         role: user.role,
-//       },
-//     });
+export async function updateUser(user: z.infer<typeof updateUserSchema>) {
+  try {
+    await prisma.user.update({
+      where: { id: user.id },
+      data: {
+        name: user.name,
+        role: user.role,
+      },
+    });
 
-//     revalidatePath("/admin/users");
+    revalidatePath("/admin/users");
 
-//     return {
-//       success: true,
-//       message: "User updated successfully",
-//     };
-//   } catch (error) {
-//     return { success: false, message: formatError(error) };
-//   }
-// }
+    return {
+      success: true,
+      message: "User updated successfully",
+    };
+  } catch (error) {
+    return { success: false, message: formatError(error) };
+  }
+}

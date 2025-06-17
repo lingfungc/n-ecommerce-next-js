@@ -14,6 +14,7 @@ import { convertToPlainObject, formatError } from "../utils";
 import { paypal } from "../paypal";
 import { revalidatePath } from "next/cache";
 import { PAGE_SIZE } from "../constants";
+import { Prisma } from "@prisma/client";
 
 // Create order and create the order items
 export async function createOrder() {
@@ -322,13 +323,11 @@ export async function getOrderSummary() {
   const salesDataRaw = await prisma.$queryRaw<
     Array<{ month: string; totalSales: Prisma.Decimal }>
   >`SELECT to_char("createdAt", 'MM/YY') as "month", sum("totalPrice") as "totalSales" FROM "Order" GROUP BY to_char("createdAt", 'MM/YY')`;
-  console.log("Sales Data Raw:", salesDataRaw);
 
   const salesData: SalesDataType = salesDataRaw.map((entry) => ({
     month: entry.month,
     totalSales: Number(entry.totalSales),
   }));
-  console.log("Sales Data Processed:", salesData);
 
   // Get latest sales
   const latestSales = await prisma.order.findMany({

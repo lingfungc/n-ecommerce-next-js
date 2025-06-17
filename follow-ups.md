@@ -52,3 +52,34 @@
 # 11 Uploadthing
 
 - When do the images get uploaded? when added or when the form is submitted?
+
+
+# 12 Admin Actions
+
+- Can admin delete another admin?
+
+
+# 13 Search Logic
+
+
+# 14 How to manage this Git Repo
+
+- Name
+
+- Files + Guides + Docs
+
+
+# 15 Tailor Made of Nagare London (Separate Repo or Branch)
+
+- What to add?
+
+- What to throw?
+
+- Email templates?
+
+
+# 16 Prices, Payments and UK VAT Tax
+
+- Billing address?
+
+- Refund?

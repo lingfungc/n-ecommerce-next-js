@@ -8,6 +8,9 @@ import ProductPrice from "@/components/shared/product/product-price";
 import ProductImages from "@/components/shared/product/product-images";
 import AddToCart from "@/components/shared/product/add-to-cart";
 import { getMyCart } from "@/lib/actions/cart.actions";
+import ReviewList from "./review-list";
+import { auth } from "@/auth";
+import Rating from "@/components/shared/product/rating";
 
 const ProductDetailsPage = async (props: {
   params: Promise<{ slug: string }>;
@@ -16,6 +19,9 @@ const ProductDetailsPage = async (props: {
 
   const product = await getProductBySlug(slug);
   if (!product) notFound();
+
+  const session = await auth();
+  const userId = session?.user?.id;
 
   const cart = await getMyCart();
 
@@ -27,6 +33,7 @@ const ProductDetailsPage = async (props: {
           <div className="col-span-2">
             <ProductImages images={product.images} />
           </div>
+
           <div className="cols-span-2 p-5">
             {/* Product Details Column */}
             <div className="flex flex-col gap-6">
@@ -34,9 +41,13 @@ const ProductDetailsPage = async (props: {
                 {product.brand} {product.category}
               </p>
               <h1 className="h3-bold">{product.name}</h1>
+
+              <Rating value={Number(product.rating)} />
               <p>
-                {product.rating} of {product.numReviews} Reviews
+                {product.numReviews}{" "}
+                {product.numReviews === 1 ? "review" : "reviews"}
               </p>
+
               <div className="flex flex-col sm:flex-row sm:items-center gap-3">
                 <ProductPrice
                   value={Number(product.price)}
@@ -70,6 +81,7 @@ const ProductDetailsPage = async (props: {
                     <Badge variant="destructive">Out of Stock</Badge>
                   )}
                 </div>
+
                 {product.stock > 0 && (
                   <div className="flex-center">
                     <AddToCart
@@ -89,6 +101,15 @@ const ProductDetailsPage = async (props: {
             </Card>
           </div>
         </div>
+      </section>
+
+      <section className="mt-10">
+        <h2 className="h2-bold mb-5">Customer Reviews</h2>
+        <ReviewList
+          userId={userId || ""}
+          productId={product.id}
+          productSlug={product.slug}
+        />
       </section>
     </>
   );

@@ -1,7 +1,7 @@
 import { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 
-// import Stripe from "stripe";
+import Stripe from "stripe";
 
 import { auth } from "@/auth";
 import { ShippingAddress } from "@/types";
@@ -30,20 +30,22 @@ const OrderDetailsPage = async (props: {
     return redirect("/unauthorized");
   }
 
-  // let client_secret = null;
+  let client_secret = null;
 
   // Check if is not paid and using stripe
-  // if (order.paymentMethod === 'Stripe' && !order.isPaid) {
-  //   // Init stripe instance
-  //   const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
-  //   // Create payment intent
-  //   const paymentIntent = await stripe.paymentIntents.create({
-  //     amount: Math.round(Number(order.totalPrice) * 100),
-  //     currency: 'USD',
-  //     metadata: { orderId: order.id },
-  //   });
-  //   client_secret = paymentIntent.client_secret;
-  // }
+  if (order.paymentMethod === "Stripe" && !order.isPaid) {
+    // Init stripe instance
+    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
+
+    // Create payment intent and add order id to it
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: Math.round(Number(order.totalPrice) * 100),
+      currency: "GBP",
+      metadata: { orderId: order.id },
+    });
+
+    client_secret = paymentIntent.client_secret;
+  }
 
   return (
     <OrderDetailsTable
@@ -52,7 +54,7 @@ const OrderDetailsPage = async (props: {
         shippingAddress: order.shippingAddress as ShippingAddress,
       }}
       paypalClientId={process.env.PAYPAL_CLIENT_ID || "sb"}
-      // stripeClientSecret={client_secret}
+      stripeClientSecret={client_secret}
       isAdmin={session?.user?.role === "admin" || false}
     />
   );
