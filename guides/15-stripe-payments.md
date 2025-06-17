@@ -13,6 +13,10 @@
 
 # 146 Stripe Setup
 
+Link: https://dashboard.stripe.com/test/dashboard
+
+Link: https://dashboard.stripe.com/test/webhooks/create?endpoint_location=hosted
+
 Setup Stripe account and get the API keys
 
 Run ```npm i stripe @stripe/stripe-js @stripe/react-stripe-js```
@@ -75,4 +79,12 @@ Create "/app/(root)/order/[id]/stripe-payment-success/page.tsx"
 
 # 150 Webhook to Mark Order as Paid
 
-Push to Vercel
+Push to production on Vercel
+
+Create "/app/api/webhooks/stripe/route.ts"
+
+Link: https://docs.stripe.com/webhooks/quickstart?locale=en-GB
+
+Set up webhook on Stripe with event "charge.succeeded"
+
+Get and import the STRIPE_WEBHOOK_SECRET (Signing secret)
