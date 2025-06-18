@@ -9,7 +9,7 @@ Run `npx create-next-app@latest`
 
 
 # 2 Run Next.js App
-Run `nvm use 18`
+Run `nvm use 20`
 Run `npm run dev`
 
 
